@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import TicTacToeGame from '@/lib/game-logic'
 import GameCell from './GameCell'
 
@@ -13,42 +13,47 @@ interface GameBoardProps {
 export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardProps) {
   const [game, setGame] = useState(() => new TicTacToeGame(mode))
   const [boardOffset, setBoardOffset] = useState({ x: 0, y: 0 })
-  const [animationFrame, setAnimationFrame] = useState<number | null>(null)
 
-  // Moving board animation - horizontal only (left to right, right to left)
+  // Animation refs (do NOT trigger re-renders)
+  const animationRef = useRef<number | null>(null)
+  const directionRef = useRef<1 | -1>(1)
+
+  /* ================================
+     MOVING BOARD ANIMATION
+     ================================ */
   useEffect(() => {
-    if (mode !== 'moving' || game.isGameOver()) return
-
-    let direction = 1 // 1 for right, -1 for left
-    let position = 0
+    if (mode !== 'moving') return
 
     const moveBoard = () => {
       setBoardOffset((prev) => {
         const maxX = 150
         const speed = 2.5
 
-        let newX = prev.x + direction * speed
+        let newX = prev.x + directionRef.current * speed
 
-        // Reverse direction at edges
         if (newX >= maxX || newX <= -maxX) {
-          direction = direction === 1 ? -1 : 1
+          directionRef.current *= -1
         }
-
-        newX = Math.max(-maxX, Math.min(maxX, newX))
 
         return { x: newX, y: 0 }
       })
 
-      setAnimationFrame(requestAnimationFrame(moveBoard))
+      animationRef.current = requestAnimationFrame(moveBoard)
     }
 
-    setAnimationFrame(requestAnimationFrame(moveBoard) as unknown as number)
+    animationRef.current = requestAnimationFrame(moveBoard)
 
     return () => {
-      if (animationFrame) cancelAnimationFrame(animationFrame)
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+        animationRef.current = null
+      }
     }
-  }, [mode, game])
+  }, [mode])
 
+  /* ================================
+     GAME LOGIC
+     ================================ */
   const handleCellClick = (index: number) => {
     if (game.isGameOver()) return
 
@@ -56,13 +61,23 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
     setGame(newGame)
 
     if (newGame.isGameOver()) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+        animationRef.current = null
+      }
       onGameOver(newGame.getWinner(), newGame.isDraw())
     }
   }
 
   const handleRetry = () => {
-    setGame(new TicTacToeGame(mode))
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+      animationRef.current = null
+    }
+
+    directionRef.current = 1
     setBoardOffset({ x: 0, y: 0 })
+    setGame(new TicTacToeGame(mode))
   }
 
   const winner = game.getWinner()
@@ -75,15 +90,25 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
     moving: 'Moving Board',
   }
 
+  /* ================================
+     RENDER
+     ================================ */
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{modeLabel[mode]}</h2>
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          {modeLabel[mode]}
+        </h2>
+
         {!winner && !isDraw && (
           <p className="text-xl font-semibold text-slate-300">
             Current Player:{' '}
-            <span className={`text-2xl font-bold ${game.isXNext() ? 'text-blue-400' : 'text-red-400'}`}>
+            <span
+              className={`text-2xl font-bold ${
+                game.isXNext() ? 'text-blue-400' : 'text-red-400'
+              }`}
+            >
               {game.isXNext() ? 'X' : 'O'}
             </span>
           </p>
@@ -110,8 +135,6 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
           ))}
         </div>
       </div>
-
-
 
       {/* Back Button */}
       {!winner && !isDraw && (
