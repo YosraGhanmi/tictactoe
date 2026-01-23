@@ -14,7 +14,7 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
   const [game, setGame] = useState(() => new TicTacToeGame(mode))
   const [boardOffset, setBoardOffset] = useState({ x: 0, y: 0 })
 
-  // Animation refs (do NOT trigger re-renders)
+  // Animation refs
   const animationRef = useRef<number | null>(null)
   const directionRef = useRef<1 | -1>(1)
 
@@ -69,17 +69,6 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
     }
   }
 
-  const handleRetry = () => {
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current)
-      animationRef.current = null
-    }
-
-    directionRef.current = 1
-    setBoardOffset({ x: 0, y: 0 })
-    setGame(new TicTacToeGame(mode))
-  }
-
   const winner = game.getWinner()
   const isDraw = game.isDraw()
   const winningLine = game.getWinningLine()
@@ -94,7 +83,17 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
      RENDER
      ================================ */
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
+      {/* Back Button – Top Left */}
+      {!winner && !isDraw && (
+        <button
+          onClick={onBackToMenu}
+          className="fixed top-4 left-4 px-3 py-2 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-lg z-50"
+        >
+          ← Menu
+        </button>
+      )}
+
       {/* Header */}
       <div className="text-center space-y-4">
         <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -135,16 +134,6 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
           ))}
         </div>
       </div>
-
-      {/* Back Button */}
-      {!winner && !isDraw && (
-        <button
-          onClick={onBackToMenu}
-          className="w-full py-3 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg"
-        >
-          Back to Menu
-        </button>
-      )}
     </div>
   )
 }
