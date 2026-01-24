@@ -3,16 +3,20 @@
 interface WinnerDisplayProps {
   winner: string | null
   isDraw: boolean
+  currentMode: 'classic' | 'overwrite' | 'moving'
   onRetry: () => void
-  onBackToMenu: () => void
+  onSwitchMode: (mode: 'classic' | 'overwrite' | 'moving') => void
 }
 
 export default function WinnerDisplay({
   winner,
   isDraw,
+  currentMode,
   onRetry,
-  onBackToMenu,
+  onSwitchMode,
 }: WinnerDisplayProps) {
+  const modes: ('classic' | 'overwrite' | 'moving')[] = ['classic', 'overwrite', 'moving']
+  const otherModes = modes.filter((mode) => mode !== currentMode)
   return (
     <>
       {/* Dark overlay backdrop */}
@@ -46,12 +50,19 @@ export default function WinnerDisplay({
             >
               Play Again
             </button>
-            <button
-              onClick={onBackToMenu}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold text-lg rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105"
-            >
-              Back to Menu
-            </button>
+
+            {/* Mode Switch Buttons - Show only other modes */}
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              {otherModes.map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => onSwitchMode(mode)}
+                  className="py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold text-sm rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 capitalize"
+                >
+                  {mode === 'classic' ? 'Classic' : mode === 'overwrite' ? 'Overwrite' : 'Moving'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

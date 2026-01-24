@@ -121,7 +121,7 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
           transform: `translate(${boardOffset.x}px, ${boardOffset.y}px)`,
         }}
       >
-        <div className="grid grid-cols-3 gap-4 w-96 h-102">
+        <div className="grid grid-cols-3 gap-4 w-full h-full" style={{ width: '480px', height: '480px' }}>
           {game.getBoard().map((cell, index) => (
             <GameCell
               key={index}

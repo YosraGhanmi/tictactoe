@@ -35,7 +35,7 @@ export default function GameCell({
       disabled={disabled}
       className={`
         w-32 h-32 text-6xl font-bold rounded-xl transition-all duration-200
-        border-3 relative
+        border-3 relative flex items-center justify-center
         ${
           isWinningCell
             ? 'bg-yellow-400 border-yellow-300 shadow-2xl shadow-yellow-400'
