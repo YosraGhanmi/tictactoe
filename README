@@ -1,0 +1,6 @@
+how to install and make it work :
+make a new repository and name it tictactoe
+1- clone the project
+2- you should have node installed in your pc (i have the version 22.17.1)
+3- install all the dependencies with the command npm install
+4-run the app with npm run dev
