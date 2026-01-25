@@ -44,7 +44,7 @@ export default function GameCell({
             : 'bg-gradient-to-br from-slate-800 to-slate-900 border-purple-500/50 hover:border-purple-400 hover:from-slate-700 hover:to-slate-800'
         }
         ${disabled && !isWinningCell ? 'cursor-not-allowed' : isEmpty ? 'cursor-pointer hover:scale-105' : 'cursor-default'}
-        ${isX ? 'text-blue-400' : isO ? 'text-red-400' : 'text-slate-600'}
+        ${isX ? 'text-red-400' : isO ? 'text-blue-400' : 'text-slate-600'}
         ${isClicking ? 'animate-cell-click' : ''}
       `}
     >
@@ -52,7 +52,7 @@ export default function GameCell({
       {isClicking && (
         <div 
           className={`absolute inset-0 rounded-xl pointer-events-none animate-color-flash ${
-            isX ? 'border-blue-400' : 'border-red-400'
+            isX ? 'border-red-400' : 'border-blue-400'
           }`}
           style={{
             borderWidth: '3px',
@@ -61,7 +61,7 @@ export default function GameCell({
       )}
       
       {/* Glowing text effect for X and O */}
-      <span className={`inline-block ${isX ? 'animate-x-glow' : isO ? 'animate-o-glow' : ''}`}>
+      <span className={`inline-block ${isX ? 'animate-o-glow' : isO ? 'animate-x-glow' : ''}`}>
         {value}
       </span>
     </button>

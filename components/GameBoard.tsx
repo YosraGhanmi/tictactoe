@@ -105,7 +105,7 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
             Current Player:{' '}
             <span
               className={`text-2xl font-bold ${
-                game.isXNext() ? 'text-blue-400' : 'text-red-400'
+                game.isXNext() ? 'text-red-400' : 'text-blue-400'
               }`}
             >
               {game.isXNext() ? 'X' : 'O'}
