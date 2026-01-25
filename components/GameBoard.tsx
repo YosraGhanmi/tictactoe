@@ -83,7 +83,7 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
      RENDER
      ================================ */
   return (
-    <div className="space-y-8 relative">
+    <div className="space-y-8 relative pt-32">
       {/* Back Button – Top Left */}
       {!winner && !isDraw && (
         <button
@@ -116,12 +116,14 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
 
       {/* Game Board */}
       <div
-        className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border-2 border-purple-500/50 shadow-2xl mx-auto w-fit transition-transform duration-75 backdrop-blur"
+        className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border-2 border-purple-500/50 shadow-2xl mx-auto transition-transform duration-75 backdrop-blur flex items-center justify-center"
         style={{
           transform: `translate(${boardOffset.x}px, ${boardOffset.y}px)`,
+          width: 'clamp(400px, 95vw, 600px)',
+          height: 'clamp(400px, 95vw, 600px)',
         }}
       >
-        <div className="grid grid-cols-3 gap-4 w-full h-full" style={{ width: '480px', height: '480px' }}>
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:gap-6" style={{ width: 'fit-content', height: 'fit-content' }}>
           {game.getBoard().map((cell, index) => (
             <GameCell
               key={index}

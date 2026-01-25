@@ -34,8 +34,10 @@ export default function GameCell({
       onClick={handleClick}
       disabled={disabled}
       className={`
-        w-32 h-32 text-6xl font-bold rounded-xl transition-all duration-200
-        border-3 relative flex items-center justify-center
+        w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40
+        text-4xl sm:text-5xl md:text-6xl lg:text-7xl
+        font-bold rounded-lg sm:rounded-xl transition-all duration-200
+        border-2 sm:border-3 relative flex items-center justify-center
         ${
           isWinningCell
             ? 'bg-yellow-400 border-yellow-300 shadow-2xl shadow-yellow-400'
