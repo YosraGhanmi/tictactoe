@@ -57,7 +57,7 @@ export default function WinnerDisplay({
                 <button
                   key={mode}
                   onClick={() => onSwitchMode(mode)}
-                  className="py-5 sm:py-6 lg:py-7 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-bold text-xs sm:text-sm lg:text-lg rounded-lg sm:rounded-xl lg:rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 capitalize"
+                  className="py-7 sm:py-8 lg:py-9 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-bold text-xs sm:text-sm lg:text-lg rounded-lg sm:rounded-xl lg:rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 capitalize"
                 >
                   {mode === 'classic' ? 'Classic' : mode === 'overwrite' ? 'Overwrite' : 'Moving'}
                 </button>
