@@ -21,6 +21,8 @@ export default function Home() {
   const [xWins, setXWins] = useState(0)
   const [oWins, setOWins] = useState(0)
   const [showGameEnd, setShowGameEnd] = useState(false)
+  const [lastWinner, setLastWinner] = useState<string | null>(null)
+  const [currentStartsWithX, setCurrentStartsWithX] = useState(true)
 
   // Timer effect
   useEffect(() => {
@@ -80,15 +82,33 @@ export default function Home() {
     setWinner(gameWinner)
     setIsDraw(gameIsDraw)
 
-    // Increment win counter
+    // Increment win counter and track last winner
     if (gameWinner === 'X') {
       setXWins((prev) => prev + 1)
+      setLastWinner('X')
     } else if (gameWinner === 'O') {
       setOWins((prev) => prev + 1)
+      setLastWinner('O')
+    } else if (gameIsDraw) {
+      // On draw, random 50/50 chance
+      setLastWinner(null)
     }
   }
 
+  const getNextStartingPlayer = (): boolean => {
+    // If there's a last winner, they start next
+    if (lastWinner === 'X') {
+      return true // X starts
+    } else if (lastWinner === 'O') {
+      return false // O starts
+    }
+    // For first game or after draw, 50/50 random chance
+    return Math.random() < 0.5
+  }
+
   const handleRetry = () => {
+    const newStartsWithX = getNextStartingPlayer()
+    setCurrentStartsWithX(newStartsWithX)
     setWinner(null)
     setIsDraw(false)
     setGameKey((prev) => prev + 1)
@@ -96,6 +116,8 @@ export default function Home() {
   }
 
   const handleSwitchMode = (mode: 'classic' | 'overwrite' | 'moving') => {
+    const newStartsWithX = getNextStartingPlayer()
+    setCurrentStartsWithX(newStartsWithX)
     setWinner(null)
     setIsDraw(false)
     setGameMode(mode)
@@ -134,7 +156,7 @@ export default function Home() {
         {!gameMode ? (
           <ModeSelector onModeSelect={handleModeSelect} />
         ) : (
-          <GameBoard key={gameKey} mode={gameMode} onGameOver={handleGameOver} onBackToMenu={handleBackToMenu} />
+          <GameBoard key={gameKey} mode={gameMode} startsWithX={currentStartsWithX} onGameOver={handleGameOver} onBackToMenu={handleBackToMenu} />
         )}
       </div>
 

@@ -20,9 +20,9 @@ export default class TicTacToeGame {
     [2, 4, 6],
   ]
 
-  constructor(mode: 'classic' | 'overwrite' | 'moving' = 'classic') {
+  constructor(mode: 'classic' | 'overwrite' | 'moving' = 'classic', startWithX: boolean = true) {
     this.board = Array(9).fill(null)
-    this.xIsNext = true
+    this.xIsNext = startWithX
     this.mode = mode
   }
 

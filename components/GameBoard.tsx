@@ -8,11 +8,22 @@ interface GameBoardProps {
   mode: 'classic' | 'overwrite' | 'moving'
   onGameOver: (winner: string | null, isDraw: boolean) => void
   onBackToMenu: () => void
+  startsWithX: boolean
 }
 
-export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardProps) {
-  const [game, setGame] = useState(() => new TicTacToeGame(mode))
+export default function GameBoard({
+  mode,
+  onGameOver,
+  onBackToMenu,
+  startsWithX,
+}: GameBoardProps) {
+  const [game, setGame] = useState(() => new TicTacToeGame(mode, startsWithX))
   const [boardOffset, setBoardOffset] = useState({ x: 0, y: 0 })
+
+  // Update game when startsWithX changes
+  useEffect(() => {
+    setGame(new TicTacToeGame(mode, startsWithX))
+  }, [mode, startsWithX])
 
   // Animation refs
   const animationRef = useRef<number | null>(null)
@@ -26,7 +37,7 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
 
     const moveBoard = () => {
       setBoardOffset((prev) => {
-        const maxX = 150
+        const maxX = 160
         const speed = 2.5
 
         let newX = prev.x + directionRef.current * speed
@@ -83,8 +94,8 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
      RENDER
      ================================ */
   return (
-    <div className="space-y-8 relative pt-32">
-      {/* Back Button – Top Left */}
+    <div className="space-y-12 relative pt-0">
+      {/* Back Button - Very Top Left Corner */}
       {!winner && !isDraw && (
         <button
           onClick={onBackToMenu}
@@ -95,8 +106,8 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
       )}
 
       {/* Header */}
-      <div className="text-center space-y-4">
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+      <div className="text-center space-y-2">
+        <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           {modeLabel[mode]}
         </h2>
 
@@ -104,7 +115,7 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
           <p className="text-xl font-semibold text-slate-300">
             Current Player:{' '}
             <span
-              className={`text-2xl font-bold ${
+              className={`text-3xl font-bold ${
                 game.isXNext() ? 'text-red-400' : 'text-blue-400'
               }`}
             >
@@ -116,14 +127,22 @@ export default function GameBoard({ mode, onGameOver, onBackToMenu }: GameBoardP
 
       {/* Game Board */}
       <div
-        className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl border-2 border-purple-500/50 shadow-2xl mx-auto transition-transform duration-75 backdrop-blur flex items-center justify-center"
+        className="
+          mx-auto -mt-2
+          bg-gradient-to-br from-slate-900 to-slate-800
+          p-10 rounded-3xl
+          border-2 border-purple-500/50
+          shadow-2xl
+          transition-transform duration-75
+          flex items-center justify-center
+        "
         style={{
           transform: `translate(${boardOffset.x}px, ${boardOffset.y}px)`,
-          width: 'clamp(400px, 95vw, 600px)',
-          height: 'clamp(400px, 95vw, 600px)',
+          width: 'clamp(490px, 95vw, 750px)',
+          height: 'clamp(490px, 95vw, 750px)',
         }}
       >
-        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:gap-6" style={{ width: 'fit-content', height: 'fit-content' }}>
+        <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {game.getBoard().map((cell, index) => (
             <GameCell
               key={index}

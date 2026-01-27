@@ -34,7 +34,7 @@ export default function GameCell({
       onClick={handleClick}
       disabled={disabled}
       className={`
-        w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40
+        w-35 h-35 sm:w-42 sm:h-42 md:w-45 md:h-45 lg:w-50 lg:h-50
         text-4xl sm:text-5xl md:text-6xl lg:text-7xl
         font-bold rounded-lg sm:rounded-xl transition-all duration-200
         border-2 sm:border-3 relative flex items-center justify-center
